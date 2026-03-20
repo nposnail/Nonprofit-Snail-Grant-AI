@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Grant Writing Intelligence</title>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#0b1512;min-height:100vh;font-family:'Instrument Sans',sans-serif;color:#e8f4f0}
+input,textarea{font-family:'Instrument Sans',sans-serif;outline:none}
+input::placeholder,textarea::placeholder{color:#6a8c80;opacity:.7}
+button{cursor:pointer;font-family:'Instrument Sans',sans-serif}
+.screen{display:none;min-height:100vh}
+.screen.active{display:block}
+.fi{width:100%;background:#162018;border:1.5px solid #1e3028;border-radius:10px;
+  padding:.75rem 1rem;color:#e8f4f0;font-size:.9rem;
+  transition:border-color .2s;resize:vertical}
+.fi:focus{border-color:#1a7f74;box-shadow:0 0 0 3px rgba(26,127,116,.12)}
+.lbl{display:block;font-size:.7rem;font-weight:600;color:#c8a84b;
+  letter-spacing:.12em;text-transform:uppercase;margin-bottom:.4rem}
+.opt{color:#6a8c80;font-weight:400;text-transform:none;letter-spacing:0;font-size:.7rem}
+.btn-p{background:linear-gradient(135deg,#1a7f74,#22a898);color:#fff;border:none;
+  border-radius:10px;padding:.8rem 1.8rem;font-weight:600;font-size:.9rem;
+  letter-spacing:.02em;transition:opacity .2s,transform .1s;
+  box-shadow:0 4px 20px rgba(26,127,116,.25);width:100%}
+.btn-p:hover:not(:disabled){opacity:.88;transform:translateY(-1px)}
+.btn-p:disabled{opacity:.3;cursor:not-allowed}
+.btn-g{background:transparent;color:#4dbfb2;border:1.5px solid #2a4238;border-radius:10px;
+  padding:.7rem 1.4rem;font-size:.88rem;transition:background .2s}
+.btn-g:hover{background:rgba(26,127,116,.08)}
+.card{background:#111e18;border:1.5px solid #2a4238;border-radius:16px;padding:2rem;max-width:700px;margin:0 auto}
+.mb1{margin-bottom:1rem}
+.error{background:rgba(192,57,43,.1);border:1px solid rgba(192,57,43,.3);border-radius:8px;padding:.75rem 1rem;color:#e07070;font-size:.88rem;margin-bottom:1rem}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.fu{animation:fadeUp .35s ease forwards}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{animation:spin .75s linear infinite;display:inline-block}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.4}}
+.gen-step{display:flex;align-items:center;gap:.75rem;padding:.65rem 0;border-bottom:1px solid #1e3028;font-size:.85rem}
+.gen-step:last-child{border-bottom:none}
+.gen-icon{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.65rem;flex-shrink:0;background:#1e3028;color:#6a8c80}
+.gen-icon.done{background:rgba(26,127,116,.2);color:#22a898}
+.gen-icon.active{background:rgba(200,168,75,.15);color:#c8a84b}
+.tab-btn{padding:.5rem 1rem;border-radius:8px;font-size:.82rem;font-weight:500;border:none;background:#162018;color:#6a8c80;transition:all .2s}
+.tab-btn.active{background:#1a7f74;color:#fff}
+.output-content{background:#f5f2ec;border:1.5px solid #dde8e0;border-radius:14px;padding:2rem;color:#1e2d28;line-height:1.9;font-size:.93rem;margin-top:.75rem;white-space:pre-wrap;word-wrap:break-word}
+.chip{padding:.4rem .85rem;border-radius:20px;font-size:.78rem;border:1.5px solid;background:#162018;border-color:#1e3028;color:#6a8c80;margin:.2rem;display:inline-block}
+.chip.on{background:rgba(26,127,116,.18);border-color:#22a898;color:#4dbfb2}
+.prog{display:flex;align-items:center;gap:.5rem;margin-bottom:1.5rem;flex-wrap:wrap;justify-content:center}
+.prog-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;background:#162018;border:1.5px solid #1e3028;color:#6a8c80}
+.prog-dot.done{background:rgba(26,127,116,.25);border-color:#1a7f74;color:#22a898}
+.prog-dot.active{background:rgba(26,127,116,.12);border-color:#22a898;color:#4dbfb2}
+.prog-line{width:16px;height:1px;background:#1e3028}
+.prog-line.done{background:#1a7f74}
+</style>
+</head>
+<body>
+
+<!-- GATE SCREEN -->
+
+<div id="screen-gate" class="screen active" style="display:flex;align-items:center;justify-content:center;padding:2rem;min-height:100vh;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(26,127,116,.15),transparent 70%),#0b1512">
+  <div class="card fu" style="max-width:400px;text-align:center">
+    <div style="width:60px;height:60px;border-radius:50%;background:rgba(26,127,116,.12);border:1.5px solid #2a4238;display:flex;align-items:center;justify-content:center;margin:0 auto 1.5rem;font-size:1.5rem">🔐</div>
+    <div style="font-size:.68rem;letter-spacing:.2em;color:#c8a84b;text-transform:uppercase;margin-bottom:.5rem">Licensed Access</div>
+    <h1 style="font-family:'Instrument Serif',serif;font-size:1.7rem;font-weight:400;margin-bottom:.4rem">Grant Writing <em style="color:#4dbfb2">Intelligence</em></h1>
+    <p style="color:#6a8c80;font-size:.85rem;margin-bottom:1.75rem;line-height:1.65">Enter the access code from your purchase confirmation email.</p>
+    <div style="position:relative;margin-bottom:.6rem">
+      <input id="code-input" class="fi" placeholder="GRANT-XXXX-XXXX" style="text-align:center;letter-spacing:.08em;text-transform:uppercase;padding-right:3.5rem" type="password" onkeydown="if(event.key==='Enter')verifyCode()"/>
+      <button onclick="toggleShow()" id="show-btn" style="position:absolute;right:1rem;top:50%;transform:translateY(-50%);background:none;border:none;color:#6a8c80;font-size:.8rem">Show</button>
+    </div>
+    <div id="gate-error" class="error" style="display:none"></div>
+    <button class="btn-p" onclick="verifyCode()" id="unlock-btn" style="margin-top:.4rem">Unlock Access →</button>
+    <div style="margin-top:1.5rem;padding:.85rem;background:#162018;border-radius:8px;border:1px solid #1e3028">
+      <p style="font-size:.75rem;color:#6a8c80;line-height:1.6">Don't have a code? <a href="#" style="color:#4dbfb2;text-decoration:none">Purchase a license →</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN APP SCREEN -->
+
+<div id="screen-app" class="screen" style="padding:1.5rem 1rem 4rem">
+
+  <!-- Top bar -->
+
+  <div style="max-width:780px;margin:0 auto 2rem;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem">
+    <div>
+      <div style="font-size:.65rem;letter-spacing:.2em;color:#c8a84b;text-transform:uppercase;margin-bottom:.25rem">Nonprofit Fundraising Suite</div>
+      <h1 style="font-family:'Instrument Serif',serif;font-size:clamp(1.6rem,4vw,2.2rem);font-weight:400">Grant Writing <em style="color:#4dbfb2">Intelligence</em></h1>
+    </div>
+    <div id="usage-badge" style="display:flex;align-items:center;gap:.5rem;padding:.4rem .9rem;background:#162018;border:1.5px solid #2a4238;border-radius:20px">
+      <span style="font-size:.68rem;color:#4dbfb2">🔑 <span id="license-label"></span></span>
+      <span style="width:1px;height:10px;background:#1e3028"></span>
+      <span id="usage-text" style="font-size:.68rem;color:#6a8c80"></span>
+    </div>
+  </div>
+
+  <!-- Progress bar -->
+
+  <div class="prog" id="progress-bar" style="max-width:700px;margin:0 auto 1.5rem"></div>
+
+  <!-- Form card -->
+
+  <div class="card fu" id="form-card">
+    <div id="step-content"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:2rem">
+      <button class="btn-g" id="back-btn" onclick="prevStep()" style="visibility:hidden">← Back</button>
+      <button class="btn-p" id="next-btn" onclick="nextStep()" style="width:auto;padding:.8rem 2rem">Continue →</button>
+    </div>
+  </div>
+
+  <!-- Output -->
+
+  <div id="output-section" style="max-width:780px;margin:2rem auto 0;display:none" class="fu">
+    <div style="display:flex;gap:.4rem;margin-bottom:.75rem;flex-wrap:wrap;align-items:center">
+      <button class="tab-btn active" id="tab-proposal" onclick="switchTab('proposal')">📄 Full Proposal</button>
+      <button class="tab-btn" id="tab-coverLetter" onclick="switchTab('coverLetter')">✉ Cover Letter</button>
+      <button class="tab-btn" id="tab-summary" onclick="switchTab('summary')">📌 Summary</button>
+      <button class="tab-btn" onclick="exportTxt()" style="margin-left:auto">⬇ Download</button>
+    </div>
+    <div id="output-content" class="output-content"></div>
+    <div style="display:flex;gap:.6rem;margin-top:.9rem;flex-wrap:wrap">
+      <button class="btn-p" onclick="copyOutput()" style="width:auto;padding:.65rem 1.4rem;font-size:.85rem">Copy Text</button>
+      <button class="btn-g" onclick="regenerate()" style="font-size:.85rem">↺ Regenerate</button>
+      <button class="btn-g" onclick="newProposal()" style="font-size:.85rem">✦ New Proposal</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── Access Codes ──────────────────────────────────────────
+const VALID_CODES = [
+  {code:"GRANT-DEMO-2024", label:"Demo",      uses:3},
+  {code:"GRANT-TEST-FREE", label:"Test",      uses:5},
+  {code:"GRANT-STARTER",   label:"Starter",   uses:5},
+  {code:"GRANT-PRO",       label:"Pro",       uses:25},
+  {code:"GRANT-UNLIMITED", label:"Unlimited", uses:-1},
+];
+
+// ── State ─────────────────────────────────────────────────
+let session = null;
+let currentStep = 0;
+let currentTab = 'proposal';
+let output = null;
+let form = {
+  orgName:'', orgMission:'', orgHistory:'', orgBudget:'',
+  funderName:'', funderFocus:'', grantAmount:'', rfpText:'',
+  programName:'', programDesc:'', targetPop:'', geography:'', outcomes:'',
+  sections:['executive_summary','statement_of_need','project_description','goals_objectives']
+};
+
+const SECTIONS = [
+  {id:'executive_summary',       label:'Executive Summary'},
+  {id:'statement_of_need',       label:'Statement of Need'},
+  {id:'project_description',     label:'Project Description'},
+  {id:'goals_objectives',        label:'Goals & Objectives'},
+  {id:'evaluation_plan',         label:'Evaluation Plan'},
+  {id:'organizational_capacity', label:'Org Capacity'},
+  {id:'sustainability',          label:'Sustainability'},
+  {id:'budget_narrative',        label:'Budget Narrative'},
+];
+
+const STEPS = [
+  {label:'Organization', icon:'🏛'},
+  {label:'Funder & RFP', icon:'🎯'},
+  {label:'Your Program', icon:'🌱'},
+  {label:'Generate',     icon:'✨'},
+];
+
+// ── Gate ─────────────────────────────────────────────────
+function toggleShow() {
+  const inp = document.getElementById('code-input');
+  const btn = document.getElementById('show-btn');
+  if (inp.type === 'password') { inp.type = 'text'; btn.textContent = 'Hide'; }
+  else { inp.type = 'password'; btn.textContent = 'Show'; }
+}
+
+async function verifyCode() {
+  const raw = document.getElementById('code-input').value.trim().toUpperCase();
+  const errEl = document.getElementById('gate-error');
+  const btn = document.getElementById('unlock-btn');
+  if (!raw) return;
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spin">⟳</span> Verifying...';
+  errEl.style.display = 'none';
+
+  const match = VALID_CODES.find(c => c.code === raw);
+  if (!match) {
+    errEl.textContent = 'Invalid code. Check your purchase confirmation email.';
+    errEl.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Unlock Access →';
+    return;
+  }
+
+  const key = 'gwi-usage-' + raw;
+  let used = parseInt(localStorage.getItem(key) || '0');
+  if (match.uses !== -1 && used >= match.uses) {
+    errEl.textContent = 'This code has used all ' + match.uses + ' generations. Purchase a new license.';
+    errEl.style.display = 'block';
+    btn.disabled = false; btn.textContent = 'Unlock Access →';
+    return;
+  }
+
+  session = {code:raw, label:match.label, uses:match.uses, used:used, key:key};
+  document.getElementById('license-label').textContent = match.label;
+  updateUsageBadge();
+
+  document.getElementById('screen-gate').classList.remove('active');
+  document.getElementById('screen-app').classList.add('active');
+  renderStep();
+}
+
+function updateUsageBadge() {
+  const el = document.getElementById('usage-text');
+  if (session.uses === -1) { el.textContent = 'Unlimited'; }
+  else {
+    const left = session.uses - session.used;
+    el.textContent = left + ' generation' + (left !== 1 ? 's' : '') + ' left';
+    el.style.color = left <= 2 ? '#e07070' : '#6a8c80';
+  }
+}
+
+// ── Progress ──────────────────────────────────────────────
+function renderProgress() {
+  const bar = document.getElementById('progress-bar');
+  let html = '';
+  STEPS.forEach((s, i) => {
+    const cls = i < currentStep ? 'done' : i === currentStep ? 'active' : '';
+    html += `<div class="prog-dot ${cls}">${i < currentStep ? '✓' : s.icon}</div>`;
+    if (i < STEPS.length - 1) html += `<div class="prog-line ${i < currentStep ? 'done' : ''}"></div>`;
+  });
+  html += `<span style="font-size:.75rem;color:#4dbfb2;margin-left:.5rem">${STEPS[currentStep]?.label}</span>`;
+  bar.innerHTML = html;
+}
+
+// ── Step renderer ─────────────────────────────────────────
+function renderStep() {
+  renderProgress();
+  const content = document.getElementById('step-content');
+  const backBtn = document.getElementById('back-btn');
+  const nextBtn = document.getElementById('next-btn');
+
+  backBtn.style.visibility = currentStep === 0 ? 'hidden' : 'visible';
+
+  if (currentStep < 3) {
+    nextBtn.style.display = 'block';
+    nextBtn.textContent = 'Continue →';
+    nextBtn.onclick = nextStep;
+  } else {
+    nextBtn.style.display = 'none';
+  }
+
+  if (currentStep === 0) {
+    content.innerHTML = `
+      <h2 style="font-family:'Instrument Serif',serif;font-size:1.25rem;margin-bottom:1.5rem">Tell us about your organization</h2>
+      <label class="lbl">Organization Name *</label>
+      <input class="fi mb1" id="f-orgName" placeholder="e.g. Bright Futures Community Center" value="${esc(form.orgName)}" oninput="form.orgName=this.value">
+      <label class="lbl">Mission Statement *</label>
+      <textarea class="fi mb1" id="f-orgMission" rows="3" placeholder="Your organization's core mission and purpose..." oninput="form.orgMission=this.value">${esc(form.orgMission)}</textarea>
+
+```
+  <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem">
+    <div>
+      <label class="lbl">Brief History <span class="opt">(optional)</span></label>
+      <textarea class="fi" rows="2" placeholder="When founded, who you serve..." oninput="form.orgHistory=this.value">${esc(form.orgHistory)}</textarea>
+    </div>
+    <div>
+      <label class="lbl">Annual Budget <span class="opt">(optional)</span></label>
+      <input class="fi" placeholder="e.g. $850,000" value="${esc(form.orgBudget)}" oninput="form.orgBudget=this.value">
+    </div>
+  </div>`;
+```
+
+}
+
+else if (currentStep === 1) {
+content.innerHTML = ` <h2 style="font-family:'Instrument Serif',serif;font-size:1.25rem;margin-bottom:.4rem">Who are you applying to?</h2> <p style="color:#6a8c80;font-size:.83rem;margin-bottom:1.4rem">Pasting the full RFP text gives you the most accurate alignment.</p> <label class="lbl">Funder / Foundation Name *</label> <input class="fi mb1" placeholder="e.g. W.K. Kellogg Foundation" value="${esc(form.funderName)}" oninput="form.funderName=this.value"> <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-bottom:1rem"> <div> <label class="lbl">Funder Priority Areas <span class="opt">(optional)</span></label> <input class="fi" placeholder="e.g. health equity, rural communities" value="${esc(form.funderFocus)}" oninput="form.funderFocus=this.value"> </div> <div> <label class="lbl">Grant Amount <span class="opt">(optional)</span></label> <input class="fi" placeholder="e.g. $75,000" value="${esc(form.grantAmount)}" oninput="form.grantAmount=this.value"> </div> </div> <label class="lbl">Paste RFP / Grant Guidelines <span class="opt">(optional but powerful)</span></label> <textarea class="fi" rows="6" placeholder="Paste the full grant RFP or funder guidelines here..." oninput="form.rfpText=this.value">${esc(form.rfpText)}</textarea> ${form.rfpText ? '<div style="margin-top:.5rem;font-size:.75rem;color:#4dbfb2">✓ RFP detected — full alignment analysis enabled</div>' : ''}`;
+}
+
+else if (currentStep === 2) {
+content.innerHTML = ` <h2 style="font-family:'Instrument Serif',serif;font-size:1.25rem;margin-bottom:1.5rem">Describe your program</h2> <label class="lbl">Program / Project Name *</label> <input class="fi mb1" placeholder="e.g. Pathways to Workforce Readiness" value="${esc(form.programName)}" oninput="form.programName=this.value"> <label class="lbl">Program Description *</label> <textarea class="fi mb1" rows="4" placeholder="What does the program do? How does it work? Who delivers it?" oninput="form.programDesc=this.value">${esc(form.programDesc)}</textarea> <label class="lbl">Intended Outcomes & Impact <span class="opt">(recommended)</span></label> <textarea class="fi mb1" rows="2" placeholder="e.g. 80% of participants secure employment within 6 months" oninput="form.outcomes=this.value">${esc(form.outcomes)}</textarea> <div style="display:grid;grid-template-columns:1fr 1fr;gap:1rem"> <div> <label class="lbl">Target Population <span class="opt">(optional)</span></label> <input class="fi" placeholder="e.g. Adults 18–35" value="${esc(form.targetPop)}" oninput="form.targetPop=this.value"> </div> <div> <label class="lbl">Geography <span class="opt">(optional)</span></label> <input class="fi" placeholder="e.g. South Side Chicago, IL" value="${esc(form.geography)}" oninput="form.geography=this.value"> </div> </div>`;
+}
+
+else if (currentStep === 3) {
+const chips = SECTIONS.map(s => {
+const on = form.sections.includes(s.id);
+return `<button class="chip ${on ? 'on' : ''}" onclick="toggleSection('${s.id}')" id="chip-${s.id}">${on ? '✓ ' : ''}${s.label}</button>`;
+}).join(’’);
+
+```
+content.innerHTML = `
+  <h2 style="font-family:'Instrument Serif',serif;font-size:1.25rem;margin-bottom:.4rem">Choose sections & generate</h2>
+  <p style="color:#6a8c80;font-size:.83rem;margin-bottom:1.25rem">Select the sections your funder requires.</p>
+  <div style="margin-bottom:1.5rem">${chips}</div>
+  <div id="gen-progress" style="display:none;background:#162018;border:1.5px solid #2a4238;border-radius:12px;padding:1.25rem;margin-bottom:1.25rem">
+    <div style="font-size:.72rem;color:#c8a84b;margin-bottom:.9rem;font-weight:600;letter-spacing:.08em;text-transform:uppercase">Building your grant package...</div>
+    <div class="gen-step"><div class="gen-icon" id="gi-analysis">·</div><span id="gl-analysis" style="color:#6a8c80">Analyzing RFP & scoring readiness</span><span id="gs-analysis" style="margin-left:auto;font-size:.7rem;color:#6a8c80"></span></div>
+    <div class="gen-step"><div class="gen-icon" id="gi-proposal">·</div><span id="gl-proposal" style="color:#6a8c80">Writing grant proposal narrative</span><span id="gs-proposal" style="margin-left:auto;font-size:.7rem;color:#6a8c80"></span></div>
+    <div class="gen-step"><div class="gen-icon" id="gi-cover">·</div><span id="gl-cover" style="color:#6a8c80">Drafting cover letter</span><span id="gs-cover" style="margin-left:auto;font-size:.7rem;color:#6a8c80"></span></div>
+    <div class="gen-step"><div class="gen-icon" id="gi-summary">·</div><span id="gl-summary" style="color:#6a8c80">Creating one-page executive summary</span><span id="gs-summary" style="margin-left:auto;font-size:.7rem;color:#6a8c80"></span></div>
+  </div>
+  <div id="gen-error" class="error" style="display:none"></div>
+  <button class="btn-p" id="gen-btn" onclick="generate()">✨ Generate Full Grant Package</button>`;
+```
+
+}
+}
+
+function toggleSection(id) {
+const idx = form.sections.indexOf(id);
+if (idx > -1) form.sections.splice(idx, 1);
+else form.sections.push(id);
+const chip = document.getElementById(‘chip-’ + id);
+const on = form.sections.includes(id);
+chip.className = ’chip ’ + (on ? ‘on’ : ‘’);
+const s = SECTIONS.find(s => s.id === id);
+chip.textContent = (on ? ’✓ ’ : ‘’) + s.label;
+}
+
+function esc(str) {
+return (str || ‘’).replace(/&/g,’&’).replace(/</g,’<’).replace(/>/g,’>’).replace(/”/g,’"’);
+}
+
+function canProceed() {
+if (currentStep === 0) return form.orgName && form.orgMission;
+if (currentStep === 1) return form.funderName;
+if (currentStep === 2) return form.programName && form.programDesc;
+return true;
+}
+
+function nextStep() {
+if (!canProceed()) {
+alert(‘Please fill in the required fields marked with *’);
+return;
+}
+currentStep++;
+renderStep();
+window.scrollTo(0, 0);
+}
+
+function prevStep() {
+if (currentStep > 0) currentStep–;
+renderStep();
+window.scrollTo(0, 0);
+}
+
+// ── Claude API ────────────────────────────────────────────
+async function callClaude(prompt, system, maxTokens) {
+const body = {
+model: ‘claude-sonnet-4-20250514’,
+max_tokens: maxTokens || 3000,
+messages: [{role:‘user’, content:prompt}]
+};
+if (system) body.system = system;
+const res = await fetch(‘https://api.anthropic.com/v1/messages’, {
+method: ‘POST’,
+headers: {‘Content-Type’:‘application/json’},
+body: JSON.stringify(body)
+});
+if (!res.ok) throw new Error(‘API ’ + res.status);
+const data = await res.json();
+return data.content?.map(c => c.text || ‘’).join(’’) || ‘’;
+}
+
+function setGenStep(id, status) {
+const icon = document.getElementById(‘gi-’ + id);
+const label = document.getElementById(‘gl-’ + id);
+const stat = document.getElementById(‘gs-’ + id);
+if (!icon) return;
+if (status === ‘active’) {
+icon.className = ‘gen-icon active’;
+icon.innerHTML = ‘<span class="spin" style="font-size:.7rem">⟳</span>’;
+label.style.color = ‘#c8a84b’;
+stat.textContent = ‘Working…’;
+stat.style.color = ‘#c8a84b’;
+} else if (status === ‘done’) {
+icon.className = ‘gen-icon done’;
+icon.textContent = ‘✓’;
+label.style.color = ‘#4dbfb2’;
+stat.textContent = ‘✓ Done’;
+stat.style.color = ‘#22a898’;
+}
+}
+
+async function generate() {
+if (session.uses !== -1 && session.used >= session.uses) {
+document.getElementById(‘gen-error’).textContent = ‘You have used all ’ + session.uses + ’ generations. Purchase a new license.’;
+document.getElementById(‘gen-error’).style.display = ‘block’;
+return;
+}
+
+document.getElementById(‘gen-btn’).disabled = true;
+document.getElementById(‘gen-progress’).style.display = ‘block’;
+document.getElementById(‘gen-error’).style.display = ‘none’;
+document.getElementById(‘output-section’).style.display = ‘none’;
+output = null;
+
+const rfpCtx = form.rfpText
+? ‘\nRFP / Grant Guidelines:\n’ + form.rfpText
+: ’\nFunder focus areas: ’ + (form.funderFocus || ‘Not specified’);
+
+const baseCtx = ’Organization: ’ + form.orgName +
+’\nMission: ’ + form.orgMission +
+’\nHistory: ’ + (form.orgHistory || ‘N/A’) +
+’\nAnnual Budget: ’ + (form.orgBudget || ‘N/A’) +
+’\nFunder: ’ + form.funderName +
+’\nGrant Amount: ’ + (form.grantAmount || ‘N/A’) +
+’\nProgram: ’ + form.programName +
+’\nDescription: ’ + form.programDesc +
+’\nTarget Population: ’ + (form.targetPop || ‘N/A’) +
+’\nGeography: ’ + (form.geography || ‘N/A’) +
+’\nOutcomes: ’ + (form.outcomes || ‘N/A’) + rfpCtx;
+
+const sectionList = form.sections.map(id => SECTIONS.find(s => s.id === id)?.label).filter(Boolean).join(’, ’);
+
+let proposal = ‘’, cover = ‘’, summary = ‘’;
+
+try {
+// Analysis
+setGenStep(‘analysis’, ‘active’);
+try {
+await callClaude(’Analyze: ’ + baseCtx + ‘\nReturn brief readiness assessment.’, ‘’, 500);
+} catch(e) {}
+setGenStep(‘analysis’, ‘done’);
+
+```
+// Proposal
+setGenStep('proposal', 'active');
+proposal = await callClaude(
+  'You are a senior nonprofit grant writer. Write a comprehensive grant proposal with these sections: ' + sectionList + '.\n\n' + baseCtx + '\n\nRequirements:\n- Use ## for each section header\n- Each section: minimum 2-4 paragraphs\n- Specific, measurable language\n- Goals & Objectives must be SMART\n- Write submission-ready content\n- Voice: confident, mission-driven',
+  'You are a senior nonprofit grant writer. Write compelling, funder-aligned content.', 3000);
+setGenStep('proposal', 'done');
+
+// Cover letter
+setGenStep('cover', 'active');
+cover = await callClaude(
+  'Write a professional grant cover letter for ' + form.orgName + ' applying to ' + form.funderName + ' for ' + (form.grantAmount || 'funding') + ' to support ' + form.programName + '.\n\n' + baseCtx + '\n\nFormat: "Dear ' + form.funderName + ' Review Committee," · 3-4 paragraphs · "Sincerely," then "[Executive Director Name], Executive Director, ' + form.orgName + '" · ~300 words',
+  'Expert nonprofit grant writer.', 1000);
+setGenStep('cover', 'done');
+
+// Summary
+setGenStep('summary', 'active');
+summary = await callClaude(
+  'Write a one-page grant executive summary (300-400 words, no headers) for ' + form.orgName + "'s " + form.programName + ' proposal to ' + form.funderName + '.\n\n' + baseCtx + '\n\nOpening immediately states what program does and who it serves. Includes grant amount. Strong final impact sentence.',
+  'Expert nonprofit grant writer.', 800);
+setGenStep('summary', 'done');
+
+output = {proposal, coverLetter: cover, summary};
+
+// Increment usage
+if (session.uses !== -1) {
+  session.used++;
+  localStorage.setItem(session.key, String(session.used));
+  updateUsageBadge();
+}
+
+// Show output
+switchTab('proposal');
+document.getElementById('output-section').style.display = 'block';
+setTimeout(() => document.getElementById('output-section').scrollIntoView({behavior:'smooth'}), 100);
+```
+
+} catch(e) {
+document.getElementById(‘gen-error’).textContent = ‘Something went wrong. Please try again.’;
+document.getElementById(‘gen-error’).style.display = ‘block’;
+document.getElementById(‘gen-btn’).disabled = false;
+}
+}
+
+function switchTab(tab) {
+currentTab = tab;
+[‘proposal’,‘coverLetter’,‘summary’].forEach(t => {
+document.getElementById(‘tab-’ + t)?.classList.toggle(‘active’, t === tab);
+});
+if (output) {
+document.getElementById(‘output-content’).textContent = output[tab] || ‘’;
+}
+}
+
+function copyOutput() {
+if (output) navigator.clipboard.writeText(output[currentTab]);
+}
+
+function exportTxt() {
+if (!output) return;
+const text = ‘=== COVER LETTER ===\n\n’ + output.coverLetter +
+‘\n\n=== ONE-PAGE SUMMARY ===\n\n’ + output.summary +
+‘\n\n=== FULL GRANT PROPOSAL ===\n\n’ + output.proposal;
+const blob = new Blob([text], {type:‘text/plain’});
+const a = document.createElement(‘a’);
+a.href = URL.createObjectURL(blob);
+a.download = (form.orgName || ‘Grant’) + ‘_Proposal.txt’;
+a.click();
+}
+
+async function regenerate() {
+currentStep = 3;
+document.getElementById(‘output-section’).style.display = ‘none’;
+renderStep();
+window.scrollTo(0,0);
+}
+
+function newProposal() {
+form = {orgName:’’,orgMission:’’,orgHistory:’’,orgBudget:’’,funderName:’’,funderFocus:’’,grantAmount:’’,rfpText:’’,programName:’’,programDesc:’’,targetPop:’’,geography:’’,outcomes:’’,sections:[‘executive_summary’,‘statement_of_need’,‘project_description’,‘goals_objectives’]};
+output = null;
+currentStep = 0;
+document.getElementById(‘output-section’).style.display = ‘none’;
+renderStep();
+window.scrollTo(0,0);
+}
+</script>
+
+</body>
+</html>
